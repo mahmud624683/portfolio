@@ -8,11 +8,12 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
-
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="css/fontAwesome.css">
         <link rel="stylesheet" href="css/light-box.css">
+        <link rel="stylesheet" href="css/modal.css">
         <link rel="stylesheet" href="css/owl-carousel.css">
         <link rel="stylesheet" href="css/templatemo-style.css">
 
@@ -551,7 +552,9 @@
                     </div>
                 </div>
             </section>
-
+            <div id="modal01" class="w3-modal">
+                <div class="loader"></div>
+            </div>
             <!--Contact-->
             <section id="contact" class="content-section">
                 <div id="contact-content">
@@ -584,7 +587,9 @@
                                 </div>
                                 <div class="col-md-12">
                                   <fieldset>
-                                    <button type="submit" id="form-submit" class="btn">Send Message Now</button>
+                                    <a href="#contact" id="sendMsg" class="btn" class="form-control" style="background-color: bisque;">
+                                        Send Message Now
+                                    </a>
                                   </fieldset>
                                 </div>
                             </div>
@@ -593,9 +598,7 @@
                 </div>
             </section>
             <section class="footer">
-                <p>Copyright &copy; 2021 Mahmudul Hasan 
-                
-                . Design: Mahmudul Hasan</p>
+                <p>Copyright &copy; 2021 Mahmudul Hasan</p>
             </section>
         </div>
 
@@ -606,8 +609,77 @@
     
     <script src="js/plugins.js"></script>
     <script src="js/main.js"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    
     <script>
+        $(document).ready(function(){
+            var url="https://script.google.com/macros/s/AKfycbw-NxhSfcAiZd3qiFtvqQlCSx_ugrnPhskOm7rzSX4uRGFevhNZHPm1xXSKHVvq7Vff/exec";
+            $("#sendMsg").on('click',function(){
+                $("#modal01")[0].style.display='block';
+                if (checkFields()) {
+                    $.ajax({
+                        url: url, 
+                        type : "POST",
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        //dataType : 'json', //"reqType:SI;email:"+
+                        data : getData(),
+                        success : function(result) {
+                            $("#modal01")[0].style.display='none';
+                            console.log(result);
+                            if(result["result"]=="success")
+                            {  
+                                alert("message sent successfully!!!")
+                                $("#name").val("");
+                                $("#email").val("");
+                                $("#subject").val("");
+                                $("#message").val("");
+                            }
+                            else alert("error!!!"+result);
+                        }
+                    });
+                }
+                
+            });
+
+            function checkFields(){
+                if($("#name").val()=="Your name..." || $("#name").val()==""){
+					alert("Please Enter Your Name")
+                    $("#name").focus();
+					return false;
+				}
+				else if($("#email").val()=="Your email..." || $("#email").val()==""){
+					alert("Please Enter a Valid Email")
+                    $("#email")[0].focus();
+					return false;
+				}
+				else if($("#subject").val()=="Subject..." || $("#subject").val()==""){
+					alert("Please Write the Subject")
+                    $("#subject").focus();
+					return false;
+				}
+				else if($("#message").val()=="Your message..." || $("#message").val()==""){
+					alert("Please Write a Message")
+                    $("#message").focus();
+					return false;
+				}
+				else{
+					return true;
+				}
+            }
+
+            function getData(){
+				var data={};
+				data["name"]	    =	$("#name").val();
+				data["email"]		=	$("#email").val();
+				data["subject"]	    =	$("#subject").val();
+				data["message"]	    =	$("#message").val();
+				data["timeStamp"]	=	new Date().toLocaleString();
+				return data;
+			}
+        });
         // Hide Header on on scroll down
         var didScroll;
         var lastScrollTop = 0;
