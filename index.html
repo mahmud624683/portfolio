@@ -48,7 +48,7 @@
             </div>
         </header>
 
-        <div class="sidebar-navigation hidde-sm hidden-xs">
+        <div class="sidebar-navigation hidde-sm hidden-xs" hidden>
             <div class="logo">
                 <a href="#">Mahmudul<em> Hasan</em></a>
             </div>
@@ -580,45 +580,53 @@
 				data["timeStamp"]	=	new Date().toLocaleString();
 				return data;
 			}
-        });
-        // Hide Header on on scroll down
-        var didScroll;
-        var lastScrollTop = 0;
-        var delta = 5;
-        var navbarHeight = $('header').outerHeight();
 
-        $(window).scroll(function(event){
-            didScroll = true;
-        });
+            // Hide Header on on scroll down
+            var didScroll;
+            var lastScrollTop = 0;
+            var delta = 5;
+            var navbarHeight = $('header').outerHeight();
 
-        setInterval(function() {
-            if (didScroll) {
-                hasScrolled();
-                didScroll = false;
-            }
-        }, 250);
-
-        function hasScrolled() {
-            var st = $(this).scrollTop();
-            
-            // Make sure they scroll more than delta
-            if(Math.abs(lastScrollTop - st) <= delta)
-                return;
-            
-            // If they scrolled down and are past the navbar, add class .nav-up.
-            // This is necessary so you never see what is "behind" the navbar.
-            if (st > lastScrollTop && st > navbarHeight){
-                // Scroll Down
-                $('header').removeClass('nav-down').addClass('nav-up');
-            } else {
-                // Scroll Up
-                if(st + $(window).height() < $(document).height()) {
-                    $('header').removeClass('nav-up').addClass('nav-down');
+            $(window).scroll(function(event){
+                didScroll = true;
+                if ($(this).scrollTop() > 100){
+                    $(".sidebar-navigation").fadeIn("slow");
                 }
+                else{
+                    $(".sidebar-navigation").hide(); 
+                }
+            });
+
+            setInterval(function() {
+                if (didScroll) {
+                    hasScrolled();
+                    didScroll = false;
+                }
+            }, 250);
+
+            function hasScrolled() {
+                var st = $(this).scrollTop();
+                
+                // Make sure they scroll more than delta
+                if(Math.abs(lastScrollTop - st) <= delta)
+                    return;
+                
+                // If they scrolled down and are past the navbar, add class .nav-up.
+                // This is necessary so you never see what is "behind" the navbar.
+                if (st > lastScrollTop && st > navbarHeight){
+                    // Scroll Down
+                    $('header').removeClass('nav-down').addClass('nav-up');
+                } else {
+                    // Scroll Up
+                    if(st + $(window).height() < $(document).height()) {
+                        $('header').removeClass('nav-up').addClass('nav-down');
+                    }
+                }
+                
+                lastScrollTop = st;
             }
-            
-            lastScrollTop = st;
-        }
+        });
+        
     </script>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
